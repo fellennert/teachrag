@@ -6,7 +6,7 @@ RAG (Retrieval-Augmented Generation) for course materials. Parses teaching mater
 
 ```r
 # From source
-devtools::install("path/to/teachrag")
+devtools::install("fellennert/teachrag")
 ```
 
 ## Setup wizard (recommended for first-time setup)

@@ -1,0 +1,29 @@
+Package: teachrag
+Title: Teaching Materials RAG with Ollama and Claude
+Version: 0.1.0
+Depends: R (>= 4.1.0)
+Authors@R: person("Felix", "Lennert", email = "felix@example.com", role = c("aut", "cre"))
+Description: RAG (Retrieval-Augmented Generation) for course materials. Parses teaching
+  materials (slides, scripts, syllabus), builds a DuckDB-backed ragnar store with
+  embeddings, and provides single-turn or multi-turn Q&A via Ollama (local) or
+  Claude (API). Includes a Shiny app for interactive use.
+License: MIT
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Suggests:
+  testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports:
+  digest (>= 0.6.0),
+  dplyr (>= 1.2.0),
+  ellmer,
+  fs,
+  ollamar,
+  purrr,
+  ragnar,
+  readr,
+  shiny,
+  stringr,
+  tibble,
+  tidyr

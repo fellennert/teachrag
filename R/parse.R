@@ -84,7 +84,7 @@ parse_materials <- function(corpus_dir, output_dir = NULL) {
     ) |>
     tidyr::unnest(chunks) |>
     dplyr::mutate(
-      chunks = text_clean |>
+      chunks = chunks |>
         stringr::str_split("### ")
     ) |>
     tidyr::unnest(chunks) |>

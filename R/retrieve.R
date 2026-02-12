@@ -24,8 +24,7 @@ ask_rag <- function(
   if (is.null(store_path) || is.null(intermediate_dir)) {
     stop("store_path and intermediate_dir required. Set options(teachrag.store_path, teachrag.intermediate_dir) or pass explicitly.")
   }
-  wal_path <- paste0(store_path, ".wal")
-  if (!fs::file_exists(wal_path)) {
+  if (!fs::file_exists(store_path)) {
     stop("RAG store not found at ", store_path, ". Run build_store() first.")
   }
 
@@ -88,13 +87,12 @@ ask_rag_chat <- function(
   intermediate_dir = teachrag_intermediate_dir(),
   model = "qwen2.5:3b",
   use_claude = FALSE,
-  top_k = 4L
+  top_k = 5L
 ) {
   if (is.null(store_path) || is.null(intermediate_dir)) {
     stop("store_path and intermediate_dir required. Set options(teachrag.store_path, teachrag.intermediate_dir) or pass explicitly.")
   }
-  wal_path <- paste0(store_path, ".wal")
-  if (!fs::file_exists(wal_path)) {
+  if (!fs::file_exists(store_path)) {
     stop("RAG store not found at ", store_path, ". Run build_store() first.")
   }
 

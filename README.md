@@ -9,7 +9,32 @@ RAG (Retrieval-Augmented Generation) for course materials. Parses teaching mater
 devtools::install("fellennert/teachrag")
 ```
 
-## Setup wizard (recommended for first-time setup)
+## Out of the box (bundled data)
+
+The package ships with pre-built course data. You can run Q&A immediately without any setup:
+
+```r
+library(teachrag)
+
+# Single-turn Q&A (uses bundled data by default)
+ask_rag("What is supervised machine learning?")
+
+# Multi-turn chat
+chat_state <- NULL
+res1 <- ask_rag_chat(chat_state, "What is supervised machine learning?")
+chat_state <- res1$chat_state
+res2 <- ask_rag_chat(chat_state, "Can you give an example?")
+
+# Shiny app
+run_app()
+
+# CLI
+interactive_cli()
+```
+
+## Setup wizard (for your own materials)
+
+To parse and index your own course materials:
 
 ```r
 library(teachrag)
@@ -18,29 +43,21 @@ run_setup_wizard()
 
 The wizard guides you through: choosing directories, parsing materials, building the store, testing a question, and launching the app.
 
-## Quick start
+## Custom paths
+
+If you have your own intermediate directory and store:
 
 ```r
 library(teachrag)
 
-# Set paths (or use defaults via options)
 intermediate_dir <- "path/to/your/intermediate"  # contains chunks.rds, syllabus.rds, store
 store_path <- file.path(intermediate_dir, "teaching_db.ragnar.duckdb")
 
-# Single-turn Q&A
-ask_rag("What is supervised machine learning?", store_path = store_path, intermediate_dir = intermediate_dir)
+# Pass explicitly, or set options
+options(teachrag.intermediate_dir = intermediate_dir, teachrag.store_path = store_path)
 
-# Multi-turn chat
-chat_state <- NULL
-res1 <- ask_rag_chat(chat_state, "What is supervised machine learning?", store_path = store_path, intermediate_dir = intermediate_dir)
-chat_state <- res1$chat_state
-res2 <- ask_rag_chat(chat_state, "Can you give an example?", store_path = store_path, intermediate_dir = intermediate_dir)
-
-# Shiny app
-run_app(store_path = store_path, intermediate_dir = intermediate_dir)
-
-# CLI
-interactive_cli(store_path = store_path, intermediate_dir = intermediate_dir)
+ask_rag("What is supervised machine learning?")
+run_app()
 ```
 
 ## Building the store

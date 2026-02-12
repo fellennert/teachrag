@@ -226,8 +226,7 @@ server <- function(input, output, session) {
     if (q == "") return(shiny::p("Enter a question and click Test."))
     out <- output_dir_resolved()
     store_path <- file.path(out, "teaching_db.ragnar.duckdb")
-    wal_path <- paste0(store_path, ".wal")
-    if (!fs::file_exists(wal_path)) {
+    if (!fs::file_exists(store_path)) {
       return(shiny::div(shiny::icon("exclamation-triangle"), " Build the store first (Step 4)."))
     }
     res <- tryCatch(
@@ -248,8 +247,7 @@ server <- function(input, output, session) {
   shiny::observeEvent(input$launch_app, {
     out <- output_dir_resolved()
     store_path <- file.path(out, "teaching_db.ragnar.duckdb")
-    wal_path <- paste0(store_path, ".wal")
-    if (out == "" || !fs::file_exists(wal_path)) {
+    if (out == "" || !fs::file_exists(store_path)) {
       shiny::showNotification("Complete steps 3 and 4 first (parse + build store).", type = "warning")
       return()
     }

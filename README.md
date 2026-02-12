@@ -2,6 +2,14 @@
 
 RAG (Retrieval-Augmented Generation) for course materials. Parses teaching materials (slides, scripts, syllabus), builds a DuckDB-backed ragnar store with embeddings, and provides Q&A via Ollama (local) or Claude (API).
 
+## Requirements
+
+Before installing or running teachrag, ensure you have:
+
+- **R packages**: `dplyr` (>= 1.2.0) and others (see DESCRIPTION). Run `teachrag::check_dependencies()` to verify, or `teachrag::ensure_dependencies()` to install missing packages.
+- **[Ollama](https://ollama.com/)** with models `qwen2.5:3b` and `nomic-embed-text` (for local Q&A and embeddings)
+- **Claude API** (optional): if you prefer using Claude via API, set `ANTHROPIC_API_KEY` in your environment to use Claude instead of a local LLM. You will still need ollama and `nomic-embed-text` for the embeddings.
+
 ## Installation
 
 ```r
@@ -71,9 +79,3 @@ parse_materials(corpus_dir = "path/to/course_material", output_dir = "path/to/in
 # 2. Build ragnar store (requires nomic-embed-text via Ollama)
 build_store(output_dir = "path/to/intermediate")
 ```
-
-## Requirements
-
-- R packages: `dplyr (>= 1.2.0)` and others (see DESCRIPTION). Run `teachrag::check_dependencies()` to verify, or `teachrag::ensure_dependencies()` to install missing packages.
-- [Ollama](https://ollama.com/) with `qwen2.5:3b` and `nomic-embed-text`
-- For Claude: `ANTHROPIC_API_KEY` in environment

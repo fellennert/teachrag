@@ -105,10 +105,14 @@ ask_rag_chat <- function(
     stop("RAG store not found at ", store_path, ". Run build_store() first.")
   }
 
+  if (is.null(progress)) {
+    progress <- function(value, detail) message(detail)
+  }
+
   is_first_turn <- is.null(chat_state) || is.null(chat_state$chat_session)
 
   if (is_first_turn) {
-    if (!is.null(progress)) progress(1/3, "Querying database...")
+    progress(1/3, "Querying database...")
     store <- ragnar::ragnar_store_connect(store_path)
     chunks_q <- ragnar::ragnar_retrieve_bm25(store, question, top_k = top_k)
     if (nrow(chunks_q) == 0) {
@@ -150,7 +154,7 @@ ask_rag_chat <- function(
     ))
   }
 
-  if (!is.null(progress)) progress(1/3, "Querying database...")
+  progress(1/3, "Querying database...")
   chunks_q <- ragnar::ragnar_retrieve_bm25(chat_state$store, question, top_k = top_k)
   if (nrow(chunks_q) == 0) {
     return(list(

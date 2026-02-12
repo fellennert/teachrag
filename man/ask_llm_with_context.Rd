@@ -9,7 +9,8 @@ ask_llm_with_context(
   context_text,
   model = c("qwen2.5:3b", "claude"),
   use_claude = FALSE,
-  intermediate_dir
+  intermediate_dir,
+  progress = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ ask_llm_with_context(
 \item{use_claude}{Use Claude API.}
 
 \item{intermediate_dir}{Path containing syllabus.rds for content checker.}
+
+\item{progress}{Optional function(value, detail) for progress updates.}
 }
 \value{
 Character answer.

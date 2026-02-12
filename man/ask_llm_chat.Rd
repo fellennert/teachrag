@@ -10,7 +10,8 @@ ask_llm_chat(
   model = c("qwen2.5:3b", "claude"),
   use_claude = FALSE,
   chat_session = NULL,
-  intermediate_dir
+  intermediate_dir,
+  progress = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ ask_llm_chat(
 \item{chat_session}{Existing session from previous turn, or NULL.}
 
 \item{intermediate_dir}{Path containing syllabus.rds.}
+
+\item{progress}{Optional function(value, detail) for progress updates.}
 }
 \value{
 List with answer and chat_session.

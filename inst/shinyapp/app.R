@@ -83,13 +83,22 @@ server <- function(input, output, session) {
 
     res <- tryCatch(
       {
-        teachrag::ask_rag_chat(
-          chat_state(),
-          question,
-          store_path = store_path,
-          intermediate_dir = intermediate_dir,
-          model = model,
-          use_claude = use_claude
+        shiny::withProgress(
+          message = "Asking...",
+          value = 0,
+          detail = "Querying database...",
+          {
+            progress <- function(value, detail) shiny::setProgress(value = value, detail = detail)
+            teachrag::ask_rag_chat(
+              chat_state(),
+              question,
+              store_path = store_path,
+              intermediate_dir = intermediate_dir,
+              model = model,
+              use_claude = use_claude,
+              progress = progress
+            )
+          }
         )
       },
       error = function(e) {

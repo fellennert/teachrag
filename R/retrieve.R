@@ -10,6 +10,7 @@
 #' @param use_claude Use Claude API. Set ANTHROPIC_API_KEY for Claude.
 #' @param top_k Number of chunks to retrieve.
 #' @param verbose Print answer to console.
+#' @param progress Optional function(value, detail) for progress updates, e.g. Shiny's setProgress.
 #' @return List with question, answer, context_text, chunks.
 #' @export
 ask_rag <- function(
@@ -18,8 +19,9 @@ ask_rag <- function(
   intermediate_dir = teachrag_intermediate_dir(),
   model = "qwen2.5:3b",
   use_claude = FALSE,
-  top_k = 4L,
-  verbose = TRUE
+  top_k = 5L,
+  verbose = TRUE,
+  progress = NULL
 ) {
   if (is.null(store_path) || is.null(intermediate_dir)) {
     stop("store_path and intermediate_dir required. Set options(teachrag.store_path, teachrag.intermediate_dir) or pass explicitly.")
@@ -28,6 +30,10 @@ ask_rag <- function(
     stop("RAG store not found at ", store_path, ". Run build_store() first.")
   }
 
+  if (is.null(progress) && verbose) {
+    progress <- function(value, detail) message(detail)
+  }
+  if (!is.null(progress)) progress(1/3, "Querying database...")
   store <- ragnar::ragnar_store_connect(store_path)
   chunks_q <- ragnar::ragnar_retrieve_bm25(store, question, top_k = top_k)
 
@@ -52,7 +58,8 @@ ask_rag <- function(
     context_text = context_text,
     model = model,
     use_claude = use_claude,
-    intermediate_dir = intermediate_dir
+    intermediate_dir = intermediate_dir,
+    progress = progress
   )
 
   result <- list(
@@ -78,6 +85,7 @@ ask_rag <- function(
 #' @param model Model name.
 #' @param use_claude Use Claude API.
 #' @param top_k Number of chunks to retrieve.
+#' @param progress Optional function(value, detail) for progress updates, e.g. Shiny's setProgress.
 #' @return List with question, answer, chunks, chat_state.
 #' @export
 ask_rag_chat <- function(
@@ -87,7 +95,8 @@ ask_rag_chat <- function(
   intermediate_dir = teachrag_intermediate_dir(),
   model = "qwen2.5:3b",
   use_claude = FALSE,
-  top_k = 5L
+  top_k = 5L,
+  progress = NULL
 ) {
   if (is.null(store_path) || is.null(intermediate_dir)) {
     stop("store_path and intermediate_dir required. Set options(teachrag.store_path, teachrag.intermediate_dir) or pass explicitly.")
@@ -99,6 +108,7 @@ ask_rag_chat <- function(
   is_first_turn <- is.null(chat_state) || is.null(chat_state$chat_session)
 
   if (is_first_turn) {
+    if (!is.null(progress)) progress(1/3, "Querying database...")
     store <- ragnar::ragnar_store_connect(store_path)
     chunks_q <- ragnar::ragnar_retrieve_bm25(store, question, top_k = top_k)
     if (nrow(chunks_q) == 0) {
@@ -121,7 +131,8 @@ ask_rag_chat <- function(
       model = model,
       use_claude = use_claude,
       chat_session = NULL,
-      intermediate_dir = intermediate_dir
+      intermediate_dir = intermediate_dir,
+      progress = progress
     )
     chat_state <- list(
       chat_session = llm_res$chat_session,
@@ -139,6 +150,7 @@ ask_rag_chat <- function(
     ))
   }
 
+  if (!is.null(progress)) progress(1/3, "Querying database...")
   chunks_q <- ragnar::ragnar_retrieve_bm25(chat_state$store, question, top_k = top_k)
   if (nrow(chunks_q) == 0) {
     return(list(
@@ -160,7 +172,8 @@ ask_rag_chat <- function(
     model = chat_state$model,
     use_claude = chat_state$use_claude,
     chat_session = chat_state$chat_session,
-    intermediate_dir = intermediate_dir
+    intermediate_dir = intermediate_dir,
+    progress = progress
   )
   chat_state$chat_session <- llm_res$chat_session
   chat_state$context_text <- context_text

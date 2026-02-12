@@ -7,9 +7,11 @@
 teachrag_store_path()
 }
 \value{
-Character path, or NULL if not set.
+Character path, or NULL if not set and no bundled data available.
 }
 \description{
 Returns the path set via \code{options(teachrag.store_path = ...)}.
-Used as default for \code{ask_rag}, \code{ask_rag_chat}, \code{run_app}, and \code{interactive_cli}.
+If not set, uses the bundled store (teaching_db.ragnar.duckdb) in the
+package's intermediate directory. Used as default for \code{ask_rag}, \code{ask_rag_chat},
+\code{run_app}, and \code{interactive_cli}.
 }

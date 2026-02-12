@@ -11,7 +11,8 @@ ask_rag_chat(
   intermediate_dir = teachrag_intermediate_dir(),
   model = "qwen2.5:3b",
   use_claude = FALSE,
-  top_k = 4L
+  top_k = 5L,
+  progress = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ ask_rag_chat(
 \item{use_claude}{Use Claude API.}
 
 \item{top_k}{Number of chunks to retrieve.}
+
+\item{progress}{Optional function(value, detail) for progress updates, e.g. Shiny's setProgress.}
 }
 \value{
 List with question, answer, chunks, chat_state.

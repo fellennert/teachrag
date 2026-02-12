@@ -25,12 +25,14 @@ res1 <- ask_rag_chat(chat_state, "What is supervised machine learning?")
 chat_state <- res1$chat_state
 res2 <- ask_rag_chat(chat_state, "Can you give an example?")
 
-# Shiny app
+# Shiny app (with progress bar)
 run_app()
 
-# CLI
+# CLI (prints status: Querying database → Producing answer → Fact-checking)
 interactive_cli()
 ```
+
+All of these show progress: **Querying database…** → **Producing initial answer…** → **Fact-checking answer…**
 
 ## Setup wizard (for your own materials)
 

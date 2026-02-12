@@ -48,7 +48,8 @@ interactive_cli <- function(
       store_path = store_path,
       intermediate_dir = intermediate_dir,
       model = model,
-      use_claude = (model == "claude")
+      use_claude = (model == "claude"),
+      progress = function(value, detail) message(detail)
     )
     chat_state <- res$chat_state
     cat("\nAnswer:\n")

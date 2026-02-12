@@ -7,9 +7,11 @@
 teachrag_intermediate_dir()
 }
 \value{
-Character path, or NULL if not set.
+Character path, or NULL if not set and no bundled data available.
 }
 \description{
 Returns the path set via \code{options(teachrag.intermediate_dir = ...)}.
-Used as default for \code{ask_rag}, \code{ask_rag_chat}, \code{run_app}, and \code{interactive_cli}.
+If not set, uses the bundled intermediate data shipped with the package
+(the pre-built course materials). Used as default for \code{ask_rag}, \code{ask_rag_chat},
+\code{run_app}, and \code{interactive_cli}.
 }

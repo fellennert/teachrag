@@ -11,7 +11,8 @@ ask_rag(
   model = "qwen2.5:3b",
   use_claude = FALSE,
   top_k = 4L,
-  verbose = TRUE
+  verbose = TRUE,
+  progress = NULL
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ ask_rag(
 \item{top_k}{Number of chunks to retrieve.}
 
 \item{verbose}{Print answer to console.}
+
+\item{progress}{Optional function(value, detail) for progress updates, e.g. Shiny's setProgress.}
 }
 \value{
 List with question, answer, context_text, chunks.

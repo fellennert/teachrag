@@ -5,6 +5,7 @@
 #' @param model Model name (qwen2.5:3b or claude).
 #' @param use_claude Use Claude API.
 #' @param intermediate_dir Path containing syllabus.rds for content checker.
+#' @param progress Optional function(value, detail) for progress updates.
 #' @return Character answer.
 #' @keywords internal
 ask_llm_with_context <- function(
@@ -12,7 +13,8 @@ ask_llm_with_context <- function(
   context_text,
   model = c("qwen2.5:3b", "claude"),
   use_claude = FALSE,
-  intermediate_dir
+  intermediate_dir,
+  progress = NULL
 ) {
   model <- match.arg(model)
   use_claude <- use_claude || (model == "claude")
@@ -45,8 +47,10 @@ ask_llm_with_context <- function(
     "\n\nQuestion:\n",
     question
   )
+  if (!is.null(progress)) progress(2/3, "Producing initial answer...")
   resp <- chat_session$chat(message, echo = FALSE)
 
+  if (!is.null(progress)) progress(0.95, "Fact-checking answer...")
   syllabus_summary <- readr::read_rds(fs::path(intermediate_dir, "syllabus.rds")) |>
     dplyr::pull(text_clean)
   checker_prompt <- stringr::str_c(
@@ -82,6 +86,7 @@ ask_llm_with_context <- function(
 #' @param use_claude Use Claude API.
 #' @param chat_session Existing session from previous turn, or NULL.
 #' @param intermediate_dir Path containing syllabus.rds.
+#' @param progress Optional function(value, detail) for progress updates.
 #' @return List with answer and chat_session.
 #' @keywords internal
 ask_llm_chat <- function(
@@ -90,12 +95,14 @@ ask_llm_chat <- function(
   model = c("qwen2.5:3b", "claude"),
   use_claude = FALSE,
   chat_session = NULL,
-  intermediate_dir
+  intermediate_dir,
+  progress = NULL
 ) {
   model <- match.arg(model)
   use_claude <- use_claude || (model == "claude")
 
-  run_content_check <- function(resp) {
+  run_content_check <- function(resp, prog = progress) {
+    if (!is.null(prog)) prog(0.95, "Fact-checking answer...")
     syllabus_summary <- readr::read_rds(fs::path(intermediate_dir, "syllabus.rds")) |>
       dplyr::pull(text_clean)
     checker_prompt <- stringr::str_c(
@@ -129,6 +136,7 @@ ask_llm_chat <- function(
     question
   )
 
+  if (!is.null(progress)) progress(2/3, "Producing initial answer...")
   if (is.null(chat_session)) {
     system_prompt <- paste(
       "You are a teaching assistant for a computational social science course.",

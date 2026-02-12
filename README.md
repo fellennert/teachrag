@@ -72,6 +72,8 @@ run_app()
 
 ## Building the store
 
+Note that right now there is no rigourous checking procedure to ensure that the chunks aren't too large for `nomic-embed-text` (i.e., length of chunks needs to be <8,192). You might want to manually preprocess your data or amend the preprocessing functions (`R/parse.R`) to prevent issues.
+
 ```r
 # 1. Parse and chunk materials
 parse_materials(corpus_dir = "path/to/course_material", output_dir = "path/to/intermediate")

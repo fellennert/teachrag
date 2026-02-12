@@ -101,7 +101,14 @@ ask_llm_chat <- function(
   model <- match.arg(model)
   use_claude <- use_claude || (model == "claude")
 
-  run_content_check <- function(resp, prog = progress) {
+  if (is.null(progress) && interactive()) {
+    progress <- function(value, detail) {
+      cat(detail, "\n", sep = "")
+      flush.console()
+    }
+  }
+
+  run_content_check <- function(resp, prog) {
     if (!is.null(prog)) prog(0.95, "Fact-checking answer...")
     syllabus_summary <- readr::read_rds(fs::path(intermediate_dir, "syllabus.rds")) |>
       dplyr::pull(text_clean)
@@ -159,10 +166,10 @@ ask_llm_chat <- function(
       )
     }
     resp <- chat_session$chat(message, echo = FALSE)
-    answer <- run_content_check(resp)
+    answer <- run_content_check(resp, progress)
   } else {
     resp <- chat_session$chat(message, echo = FALSE)
-    answer <- run_content_check(resp)
+    answer <- run_content_check(resp, progress)
   }
 
   list(answer = answer, chat_session = chat_session)

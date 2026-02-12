@@ -106,7 +106,10 @@ ask_rag_chat <- function(
   }
 
   if (is.null(progress)) {
-    progress <- function(value, detail) message(detail)
+    progress <- function(value, detail) {
+      cat(detail, "\n", sep = "")
+      if (interactive()) flush.console()
+    }
   }
 
   is_first_turn <- is.null(chat_state) || is.null(chat_state$chat_session)

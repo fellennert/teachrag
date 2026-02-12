@@ -49,7 +49,10 @@ interactive_cli <- function(
       intermediate_dir = intermediate_dir,
       model = model,
       use_claude = (model == "claude"),
-      progress = function(value, detail) message(detail)
+      progress = function(value, detail) {
+      cat(detail, "\n", sep = "")
+      flush.console()
+    }
     )
     chat_state <- res$chat_state
     cat("\nAnswer:\n")
